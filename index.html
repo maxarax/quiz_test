@@ -1,61 +1,144 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Oldtimer Quiz</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      font-family: sans-serif;
+      background-color: #f9f9f9;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
     }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: #fff;
+    .quiz-container {
+      background: white;
       padding: 30px;
+      border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
     }
-    h1 {
+    h1, h2 {
       text-align: center;
-      color: #333;
     }
     .question {
+      font-size: 1.2em;
       margin-bottom: 20px;
     }
-    .question h3 {
-      margin-bottom: 10px;
-    }
-    .options label {
-      display: block;
-      margin-bottom: 5px;
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
     button {
-      padding: 10px 20px;
-      background: #0077cc;
-      color: #fff;
+      padding: 12px;
       border: none;
+      border-radius: 5px;
+      background-color: #0077cc;
+      color: white;
       cursor: pointer;
-      margin-top: 20px;
+      transition: background 0.2s;
+      font-size: 16px;
     }
     button:hover {
-      background: #005fa3;
+      background-color: #005fa3;
     }
-    #result {
-      margin-top: 30px;
-      font-size: 18px;
+    .result {
       text-align: center;
+      font-size: 1.2em;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Oldtimer-Quiz</h1>
-    <form id="quizForm">
-      <div class="question">
-        <h3>1. Welches Auto wird oft als erster echter Oldtimer angesehen?</h3>
+  <div class="quiz-container">
+    <h1>Oldtimer Quiz</h1>
+    <div id="quiz">
+      <!-- Quiz-Inhalte werden hier eingefügt -->
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Welches Auto gilt als erster Oldtimer?",
+        options: ["Ford T-Modell", "VW Käfer", "Benz Patent-Motorwagen"],
+        answer: 2
+      },
+      {
+        question: "Ab wann gilt ein Auto in Deutschland offiziell als Oldtimer?",
+        options: ["20 Jahre", "25 Jahre", "30 Jahre"],
+        answer: 2
+      },
+      {
+        question: "Welcher Hersteller baute den 300 SL Flügeltürer?",
+        options: ["BMW", "Mercedes-Benz", "Audi"],
+        answer: 1
+      },
+      {
+        question: "Was bedeutet das 'H' auf einem Oldtimer-Kennzeichen?",
+        options: ["Historisch", "Handgemacht", "Herstellerbedingt"],
+        answer: 0
+      },
+      {
+        question: "Welches dieser Autos ist KEIN Oldtimer von Citroën?",
+        options: ["2CV", "DS", "Golf"],
+        answer: 2
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function showQuestion() {
+      const quizContainer = document.getElementById("quiz");
+      const q = questions[currentQuestion];
+
+      quizContainer.innerHTML = `
+        <div class="question"><strong>Frage ${currentQuestion + 1}:</strong> ${q.question}</div>
         <div class="options">
-          <label><input type="radio" name="q1" value="a"> Ford Mustang</label>
-          <label><input type="radio" name="q1" value="b"> Benz P
+          ${q.options.map((opt, index) => `<button onclick="selectAnswer(${index})">${opt}</button>`).join('')}
+        </div>
+      `;
+    }
+
+    function selectAnswer(selected) {
+      if (selected === questions[currentQuestion].answer) {
+        score++;
+      }
+
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const quizContainer = document.getElementById("quiz");
+      quizContainer.innerHTML = `
+        <div class="result">
+          <h2>Quiz beendet!</h2>
+          <p>Du hast <strong>${score}</strong> von <strong>${questions.length}</strong> Punkten erreicht.</p>
+          <button onclick="restartQuiz()">Erneut spielen</button>
+        </div>
+      `;
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      showQuestion();
+    }
+
+    // Start
+    showQuestion();
+  </script>
+</body>
+</html>
